@@ -1,8 +1,9 @@
 <img src="https://raw.githubusercontent.com/euctrl-pru/HexAeroR/main/assets/hexaeror_logo.png" alt="HexAeroR logo" style="border: 1px solid black" align="right" width="300"/>
 
-# HexAeroR [UNDER DEVELOPMENT]
+# HexAeroR
 
-## Introduction
+<!-- badges: start -->
+<!-- badges: end -->
 
 HexAeroR is a EUROCONTROL R package designed for aviation professionals and data analysts. It allows for the determination of used airports, runways, taxiways, and stands based on available (ADS-B) flight trajectory coordinates. This tool aims to enhance aviation data analysis, facilitating the extraction of milestones for performance analysis.
 
@@ -11,23 +12,27 @@ HexAeroR is a EUROCONTROL R package designed for aviation professionals and data
 -   **Airport Detection**: Identifies airports involved in a flight's trajectory.
 -   **Runway Utilization**: Determines which runways are used during takeoff and landing.
 
-### Installation
 
-To install the HexAeroR package you can use `devtools::install_github()`.
+## Installation
+
+You can install the development version of HexAeroR from [GitHub](https://github.com/) with:
 
 ``` r
+# install.packages("devtools")
 devtools::install_github("euctrl-pru/HexAeroR")
 ```
 
-## Quick Start
+## Example
 
-To get started with HexAeroR in R, you would load the library as follows:
+This is a basic example which shows you how to solve a common problem:
 
 ``` r
 library(HexAeroR)
+## basic example code
 ```
 
 This will prompt you to download the geospatial metadata from Zenodo necessary to run the package. It will only cache once. The parquet datasets are available here: <https://zenodo.org/records/10651018>.
+
 
 ``` python
 # Load trajectory data
