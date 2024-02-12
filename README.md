@@ -17,7 +17,7 @@ HexAeroR is a EUROCONTROL R package designed for aviation professionals and data
 
 You can install the development version of HexAeroR from [GitHub](https://github.com/) with:
 
-``` r
+```r
 # install.packages("devtools")
 devtools::install_github("euctrl-pru/HexAeroR")
 ```
@@ -26,7 +26,7 @@ devtools::install_github("euctrl-pru/HexAeroR")
 
 This is a basic example which shows you how to solve a common problem:
 
-``` r
+```r
 library(HexAeroR)
 ## basic example code
 ```
@@ -34,7 +34,7 @@ library(HexAeroR)
 This will prompt you to download the geospatial metadata from Zenodo necessary to run the package. It will only cache once. The parquet datasets are available here: <https://zenodo.org/records/10651018>.
 
 
-``` python
+```r
 # Load trajectory data
 df <- load_dataset(name = "trajectories.parquet", datatype = "test_data")
 
@@ -50,7 +50,7 @@ list(scored_rwy_detections_df, rwy_detections_df) <- identify_runways(df)
 
 ### Visualizing Methodology
 
-``` r
+```r
 
 # Load approach hex dataset for an airport (e.g., EGLL)
 egll <- load_dataset(name = "EGLL.parquet", datatype = "runway_hex")
