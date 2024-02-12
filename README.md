@@ -1,6 +1,6 @@
 <img src="https://raw.githubusercontent.com/euctrl-pru/HexAeroR/main/assets/hexaeror_logo.png" alt="HexAeroR logo" style="border: 1px solid black" align="right" width="300"/>
 
-# HexAeroR
+# HexAeroR [under construction]
 
 <!-- badges: start -->
 <!-- badges: end -->
