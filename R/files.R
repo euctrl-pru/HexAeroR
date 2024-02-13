@@ -57,4 +57,5 @@ ensure_data_available <- function() {
 }
 
 # Uncomment the line below to call the function, noting this will prompt the user when sourced or run.
-ensure_data_available()
+#ensure_data_available()
+
