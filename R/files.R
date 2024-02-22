@@ -4,6 +4,18 @@ library(progress)
 library(zip)
 library(tidyverse)
 
+#' Download and Extract ZIP File from URL
+#'
+#' This function downloads a ZIP file from a specified URL and extracts it into a target directory.
+#' It creates the target directory if it does not exist. The function handles the download progress
+#' display and checks for successful download status.
+#'
+#' @param url Character string specifying the URL of the ZIP file to download.
+#' @param extract_to Character string specifying the path to the directory where the ZIP file should be extracted.
+#' @return None
+#' @examples
+#' download_and_extract_zip("https://example.com/data.zip", "path/to/extract")
+#' @import httr fs progress
 download_and_extract_zip <- function(url, extract_to) {
   if (!dir_exists(extract_to)) {
     message(paste("Creating directory", extract_to, "..."))
@@ -30,7 +42,16 @@ download_and_extract_zip <- function(url, extract_to) {
   }
 }
 
-
+#' Setup Data Directory with Required Files
+#'
+#' This function sets up a data directory by downloading and extracting necessary ZIP files.
+#' It processes a list of URLs pointing to ZIP files, downloading and extracting each into the specified base directory.
+#'
+#' @param base_dir Character string specifying the base directory into which the data will be extracted.
+#' @return None
+#' @examples
+#' setup_data_directory("path/to/data")
+#' @importFrom purrr walk
 setup_data_directory <- function(base_dir) {
   urls <- c(
     "https://zenodo.org/records/10651018/files/airport_hex.zip?download=1",
@@ -40,7 +61,16 @@ setup_data_directory <- function(base_dir) {
   walk(urls, ~download_and_extract_zip(.x, base_dir))
 }
 
-
+#' Ensure Required Data Files are Available
+#'
+#' This function checks if required data files are available in a specified directory.
+#' If not, it prompts the user to download and set up the necessary files.
+#' The function is intended to be run before the main analysis to ensure all needed data is present.
+#'
+#' @return None
+#' @examples
+#' ensure_data_available()
+#' @importFrom purrr map_lgl
 ensure_data_available <- function() {
   data_dir <- file.path(str_replace(dirname(sys.frame(1)$ofile), '/R', ''), 'data')
   required_files <- c('airport_hex.parquet', 'runway_hex.parquet', 'test_data.parquet')
