@@ -13,8 +13,6 @@ library(tidyverse)
 #' @param url Character string specifying the URL of the ZIP file to download.
 #' @param extract_to Character string specifying the path to the directory where the ZIP file should be extracted.
 #' @return None
-#' @examples
-#' download_and_extract_zip("https://example.com/data.zip", "path/to/extract")
 #' @import httr fs progress
 download_and_extract_zip <- function(url, extract_to) {
   if (!dir_exists(extract_to)) {
@@ -49,8 +47,6 @@ download_and_extract_zip <- function(url, extract_to) {
 #'
 #' @param base_dir Character string specifying the base directory into which the data will be extracted.
 #' @return None
-#' @examples
-#' setup_data_directory("path/to/data")
 #' @importFrom purrr walk
 setup_data_directory <- function(base_dir) {
   urls <- c(
@@ -68,9 +64,8 @@ setup_data_directory <- function(base_dir) {
 #' The function is intended to be run before the main analysis to ensure all needed data is present.
 #'
 #' @return None
-#' @examples
-#' ensure_data_available()
 #' @importFrom purrr map_lgl
+#' @export
 ensure_data_available <- function() {
   data_dir <- file.path(str_replace(dirname(sys.frame(1)$ofile), '/R', ''), 'data')
   required_files <- c('airport_hex.parquet', 'runway_hex.parquet', 'test_data.parquet')
