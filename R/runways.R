@@ -17,8 +17,8 @@ library(tidyverse)
 #' @importFrom arrow read_parquet
 #' @export
 load_dataset <- function(name, datatype) {
-  file_path <- file.path(".", "data", datatype, name)
-  #file_path <- system.file("HexAeroR", file_path, package = "HexAeroR")
+  file_path <- system.file('data', package = "HexAeroR")
+  file_path <- file.path(file_path, datatype, name)
   return(arrow::read_parquet(file_path))
 }
 
@@ -105,7 +105,7 @@ convert_baroalt_in_m_to_ft_and_FL <- function(df, baroaltitude_col = 'baroaltitu
   # Converts barometric altitudes from meters to feet and flight levels
   df |>
     mutate(
-      baroaltitude_ft = .[[baroaltitude_col]] * 3.28084,
+      baroaltitude_ft = .data[[baroaltitude_col]] * 3.28084,
       baroaltitude_fl = baroaltitude_ft / 100
     )
 }
@@ -126,7 +126,7 @@ convert_baroalt_in_m_to_ft_and_FL <- function(df, baroaltitude_col = 'baroaltitu
 filter_low_altitude_statevectors <- function(df, baroalt_ft_col = 'baroaltitude_ft', threshold = 5000) {
   # Filters out aircraft states below a specified altitude threshold
   df |>
-    filter(.[[baroalt_ft_col]] < threshold)
+    filter(.data[[baroalt_ft_col]] < threshold)
 }
 
 #' Identify Potential Airport Arrivals and Departures
@@ -274,8 +274,7 @@ identify_runways_from_low_trajectories <- function(apt_detections_df, df_f_low_a
            new_det_id = cumsum(ifelse(is.na(time_diff) | time_diff > 40, 1, 0)),
            rwy_det_id = paste(apt_det_id, new_det_id, sep = "_")) |>
     ungroup() |>
-    select(c('id', 'apt_det_id', 'rwy_det_id', 'airport_ident', 'gate_id', 'le_ident', 'he_ident', 'min_time', 'max_time')) |>
-    rename(c(min = min_time, max = max_time))
+    select(c('id', 'apt_det_id', 'rwy_det_id', 'airport_ident', 'gate_id', 'le_ident', 'he_ident', 'min_time', 'max_time'))
 
   return(final_df)
 }
@@ -494,6 +493,7 @@ identify_runways <-
            longitude_col = 'lon',
            latitude_col = 'lat',
            baroaltitude_col = 'baroaltitude'){
+
     df_w_id <- add_statevector_id(df)
 
     df_w_hex <-
