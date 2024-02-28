@@ -3,6 +3,7 @@
 export(add_hex_ids)
 export(add_statevector_id)
 export(convert_baroalt_in_m_to_ft_and_FL)
+export(ensure_data_available)
 export(filter_low_altitude_statevectors)
 export(identify_potential_airports)
 export(identify_runways)

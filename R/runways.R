@@ -14,8 +14,6 @@ library(tidyverse)
 #' @param name The name of the dataset file (without extension) to be loaded.
 #' @param datatype The type of data or directory under 'data' where the dataset is stored.
 #' @return An object of class `tbl_df` representing the dataset loaded from the Parquet file.
-#' @examples
-#' df <- load_dataset("airport_hex", "hex_data")
 #' @importFrom arrow read_parquet
 #' @export
 load_dataset <- function(name, datatype) {
@@ -32,8 +30,6 @@ load_dataset <- function(name, datatype) {
 #'
 #' @param df A dataframe to which the 'statevector_id' column will be added.
 #' @return A dataframe with an added 'statevector_id' column.
-#' @examples
-#' df <- add_statevector_id(df)
 #' @importFrom dplyr mutate row_number
 #' @export
 add_statevector_id <- function(df) {
@@ -55,8 +51,6 @@ add_statevector_id <- function(df) {
 #' @param latitude_col The name of the column containing latitude values.
 #' @param resolutions A vector of integers specifying the H3 resolution(s) for which hex IDs are generated.
 #' @return A dataframe with added columns for H3 hex IDs at specified resolutions.
-#' @examples
-#' df <- add_hex_ids(df, "lon", "lat", c(6, 9))
 #' @note This function assumes that the `h3jsr` and `sf` packages are installed and available.
 #'       It also converts the dataframe to an `sf` object for processing.
 #' @importFrom sf st_sfc st_point st_sf
@@ -105,8 +99,6 @@ add_hex_ids <- function(df, longitude_col = 'lon', latitude_col = 'lat', resolut
 #' Default is 'baroaltitude'.
 #' @return A dataframe with two new columns: one for altitude in feet ('baroaltitude_ft')
 #' and another for flight level ('baroaltitude_fl').
-#' @examples
-#' df <- convert_baroalt_in_m_to_ft_and_FL(df, "baroaltitude")
 #' @importFrom dplyr mutate
 #' @export
 convert_baroalt_in_m_to_ft_and_FL <- function(df, baroaltitude_col = 'baroaltitude') {
@@ -129,8 +121,6 @@ convert_baroalt_in_m_to_ft_and_FL <- function(df, baroaltitude_col = 'baroaltitu
 #' @param threshold Altitude threshold in feet below which rows are filtered out.
 #' Default is 5000 feet.
 #' @return A dataframe with rows below the specified altitude threshold filtered out.
-#' @examples
-#' filtered_df <- filter_low_altitude_statevectors(df, "baroaltitude_ft", 5000)
 #' @importFrom dplyr filter
 #' @export
 filter_low_altitude_statevectors <- function(df, baroalt_ft_col = 'baroaltitude_ft', threshold = 5000) {
@@ -155,8 +145,6 @@ filter_low_altitude_statevectors <- function(df, baroalt_ft_col = 'baroaltitude_
 #' 'medium_airport'. Default is `c('large_airport', 'medium_airport')`.
 #' @return A dataframe of potential airport arrivals and departures, with start and end points for
 #' each track.
-#' @examples
-#' potential_airports_df <- identify_potential_airports(df, "id", "hex_id", c("large_airport", "medium_airport"))
 #' @importFrom dplyr filter rename inner_join group_by mutate ungroup select full_join rename_with
 #' @importFrom tidyr separate
 #' @export
@@ -220,8 +208,6 @@ identify_potential_airports <- function(df, track_id_col = 'id', hex_id_col = 'h
 #' @param apt_detections_df Dataframe of airport detections.
 #' @param df_f_low_alt Dataframe of flight trajectories with low altitude.
 #' @return A dataframe with information on matched runways for each trajectory.
-#' @examples
-#' final_df <- identify_runways_from_low_trajectories(apt_detections_df, df_f_low_alt)
 #' @importFrom dplyr mutate select inner_join filter arrange group_by summarise ungroup unnest
 #' @importFrom lubridate ymd_hms
 #' @export
@@ -303,8 +289,6 @@ identify_runways_from_low_trajectories <- function(apt_detections_df, df_f_low_a
 #' @param df Dataframe containing detailed trajectory and runway intersection data.
 #' @return A list containing two dataframes: one with aggregated trajectory information and
 #' another indicating whether each trajectory corresponds to an arrival or departure.
-#' @examples
-#' results <- manipulate_df_and_determine_arrival_departure(df)
 #' @importFrom dplyr mutate filter select rename group_by summarise ungroup full_join
 #' @importFrom lubridate difftime
 #' @importFrom purrr map map_chr map_dbl
@@ -404,8 +388,6 @@ manipulate_df_and_determine_arrival_departure <- function(df) {
 #' @param det Dataframe containing arrival or departure status for each trajectory.
 #' @return A dataframe with runways determined based on scoring heuristics, including information
 #' on the likely runway, score, and status (arrival/departure/undetermined) for each detection.
-#' @examples
-#' scored_df <- score_and_apply_heuristics(df, det)
 #' @importFrom dplyr select filter mutate left_join replace_na group_by slice_max ungroup summarise
 #' @export
 score_and_apply_heuristics <- function(df, det) {
@@ -504,8 +486,6 @@ score_and_apply_heuristics <- function(df, det) {
 #' @param baroaltitude_col Name of the column containing barometric altitude values.
 #' @return A list containing dataframes: one with scored runway detections and another with detailed
 #' runway detections data before scoring.
-#' @examples
-#' result <- identify_runways(df, "id", "lon", "lat", "baroaltitude")
 #' @importFrom purrr list
 #' @export
 identify_runways <-
