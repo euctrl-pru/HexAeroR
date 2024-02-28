@@ -3,6 +3,7 @@ library(fs)
 library(progress)
 library(zip)
 library(tidyverse)
+library(utils)
 
 #' Download and Extract ZIP File from URL
 #'
@@ -32,7 +33,7 @@ download_and_extract_zip <- function(url, extract_to) {
     writeBin(content(response, "raw"), con = local_zip_path)
 
     message(paste("Extracting data to", extract_to, "..."))
-    unzip(local_zip_path, exdir = extract_to)
+    utils::unzip(local_zip_path, exdir = extract_to, setTimes = FALSE)
     file_delete(local_zip_path)
     message("Download and extraction complete.")
   } else {
@@ -67,7 +68,7 @@ setup_data_directory <- function(base_dir) {
 #' @importFrom purrr map_lgl
 #' @export
 ensure_data_available <- function() {
-  data_dir <- file.path(str_replace(dirname(sys.frame(1)$ofile), '/R', ''), 'data')
+  data_dir <- system.file("data", package = "HexAeroR")
   required_files <- c('airport_hex.parquet', 'runway_hex.parquet', 'test_data.parquet')
 
   if (!all(map_lgl(required_files, ~dir_exists(file.path(data_dir, .x))))) {
