@@ -287,9 +287,9 @@ identify_runways_from_low_trajectories <- function(apt_detections_df, df_f_low_a
            time_diff = if_else(is.na(time_diff), 0, time_diff),
            new_det_id = cumsum(ifelse(is.na(time_diff) | time_diff > 40, 1, 0)),
            rwy_det_id = paste(apt_det_id, new_det_id, sep = "_")) |>
-    ungroup() #|>
-    #select(c('id', 'apt_det_id', 'rwy_det_id', 'airport_ident', 'gate_id', 'le_ident', 'he_ident', 'min_time', 'max_time')) |>
-    #rename(c(min = min_time, max = max_time))
+    ungroup() |>
+    select(c('id', 'apt_det_id', 'rwy_det_id', 'airport_ident', 'gate_id', 'le_ident', 'he_ident', 'min_time', 'max_time')) |>
+    rename(c(min = min_time, max = max_time))
 
   return(final_df)
 }
