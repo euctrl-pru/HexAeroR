@@ -68,6 +68,12 @@ setup_data_directory <- function(base_dir) {
 #' @importFrom purrr map_lgl
 #' @export
 ensure_data_available <- function() {
+  data_dir <- str_replace(system.file("NAMESPACE", package = "HexAeroR"), '/NAMESPACE', '/data/')
+
+  if (dir.exists(data_dir)==FALSE){
+    dir.create(data_dir)
+  }
+
   data_dir <- system.file("data", package = "HexAeroR")
   required_files <- c('airport_hex.parquet', 'runway_hex.parquet', 'test_data.parquet')
 
