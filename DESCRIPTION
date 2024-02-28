@@ -1,6 +1,6 @@
 Package: HexAeroR
 Title: A package to determine used airports, runways, taxiways and stands based on available flight coordinates.
-Version: 1.0.0
+Version: 0.0.9000
 Authors@R: 
     person("Quinten", "Goens", , "qgoens@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
