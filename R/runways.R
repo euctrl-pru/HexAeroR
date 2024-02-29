@@ -514,11 +514,11 @@ identify_runways <-
            longitude_col = 'lon',
            latitude_col = 'lat',
            baroaltitude_col = 'baroaltitude'){
-
-    message('[STAGE 1] Reading statevectors...')
+    message('[HexAero for R - Starting engines...]')
+    message(paste0('[STAGE 1] Reading statevectors... (',lubridate::now(),')'))
     df_w_id <- add_statevector_id(df)
 
-    message('[STAGE 2] Adding hex ids...')
+    message(paste0('[STAGE 2] Adding hex ids... (',lubridate::now(),')'))
     df_w_hex <-
       add_hex_ids(
         df_w_id,
@@ -527,17 +527,17 @@ identify_runways <-
         resolutions = c(5, 11)
       )
 
-    message('[STAGE 3] Converting baroaltitudes to FL...')
+    message(paste0('[STAGE 3] Converting baroaltitudes to FL... (',lubridate::now(),')'))
     df_w_baroalt_ft_fl <-
       convert_baroalt_in_m_to_ft_and_FL(df_w_hex, baroaltitude_col = baroaltitude_col)
 
-    message('[STAGE 4] Filtering low altitudes for airport matching...')
+    message(paste0('[STAGE 4] Filtering low altitudes for airport matching... (',lubridate::now(),')'))
     df_f_low_alt <-
       filter_low_altitude_statevectors(df_w_baroalt_ft_fl,
                                        baroalt_ft_col = 'baroaltitude_ft',
                                        threshold = 5000)
 
-    message('[STAGE 5] Finding matching airports...')
+    message(paste0('[STAGE 5] Finding matching airports... (',lubridate::now(),')'))
     apt_detections_df <-
       identify_potential_airports(
         df_f_low_alt,
@@ -546,11 +546,11 @@ identify_runways <-
         apt_types = c('large_airport', 'medium_airport')
       )
 
-    message('[STAGE 6] Finding matching runways...')
+    message(paste0('[STAGE 6] Finding matching runways... (',lubridate::now(),')'))
     rwy_detections_df <-
       identify_runways_from_low_trajectories(apt_detections_df, df_f_low_alt)
 
-    message('[STAGE 7] Applying heuristics to determine most likely runways...')
+    message(paste0('[STAGE 7] Applying heuristics to determine most likely runways... (',lubridate::now(),')'))
     res <- manipulate_df_and_determine_arrival_departure(rwy_detections_df)
 
     det = res$det
@@ -558,6 +558,6 @@ identify_runways <-
 
     scored_rwy_detections_df <- score_and_apply_heuristics(rwy_detections_df, det)
 
-    print('[DONE] Thank you for your patience.')
+    message(paste0('[DONE] Thank you for flying with HexAero... (',lubridate::now(),')'))
     return(list(scored_rwy_detections_df = scored_rwy_detections_df, rwy_detections_df = rwy_detections_df))
   }
