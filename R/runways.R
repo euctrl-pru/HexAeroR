@@ -242,7 +242,7 @@ identify_runways_from_low_trajectories <- function(apt_detections_df, df_f_low_a
         select(all_of(core_cols_rwy)) |>
         rename(c('id_apt' = 'id'))
     }, error = function(e) {
-      print(past0('Warning: Due to limited data in OurAirports, airport [', .apt,'] does not have the runway config. No matching for this airport.'))
+      print(paste0('Warning: Due to limited data in OurAirports, airport [', .apt,'] does not have the runway config. No matching for this airport.'))
       return(tibble(id = numeric(),
                     airport_ident = character(),
                     gate_id = character(),
