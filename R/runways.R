@@ -517,7 +517,7 @@ identify_runways <-
         df_f_low_alt,
         track_id_col = track_id_col,
         hex_id_col = 'hex_id',
-        apt_types = c('large_airport')
+        apt_types = c('large_airport', 'medium_airport')
       )
 
     rwy_detections_df <-
