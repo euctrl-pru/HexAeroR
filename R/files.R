@@ -75,6 +75,7 @@ ensure_data_available <- function() {
   }
 
   data_dir <- system.file("data", package = "HexAeroR")
+
   required_files <- c('airport_hex.parquet', 'runway_hex.parquet', 'test_data.parquet')
 
   if (!all(map_lgl(required_files, ~dir_exists(file.path(data_dir, .x))))) {
