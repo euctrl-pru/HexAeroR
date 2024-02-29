@@ -424,6 +424,7 @@ score_and_apply_heuristics <- function(df, det) {
   result <- result |>
     #filter(gate_type != 'runway_hexagons') |> # This will cause issues when
     mutate(high_number_intersections = intersected_subsections > 5,
+           minimal_number_intersections = intersected_subsections > 2,
            low_minimal_distance = minimal_distance_runway < 5,
            touched_closest_segment_to_rw = minimal_distance_runway == 1,
            touched_second_closest_segment_to_rw = minimal_distance_runway <= 2)
@@ -437,7 +438,7 @@ score_and_apply_heuristics <- function(df, det) {
 
   # Calculate score
   result <- result |>
-    mutate(score = (1 * weights['approach_detected'] +
+    mutate(score = as.numeric(minimal_number_intersections)*(1 * weights['approach_detected'] +
                       as.numeric(runway_detected) * weights['runway_detected'] +
                       as.numeric(high_number_intersections) * weights['high_number_intersections'] +
                       as.numeric(low_minimal_distance) * weights['low_minimal_distance'] +
@@ -448,7 +449,8 @@ score_and_apply_heuristics <- function(df, det) {
   result <- result |>
     left_join(det, by = c('id_x', 'apt_det_id', 'rwy_det_id', 'airport_ident', 'le_ident', 'he_ident')) |>
     mutate(status = replace_na(status, 'undetermined'),
-           rwy = paste(le_ident, he_ident, sep = "/"))
+           rwy = paste(le_ident, he_ident, sep = "/")) |>
+    filter(score > 10) # Minimal requirement to quality.. Otherwise it's just a touch
 
   # Determine winners based on max score
   rwy_winner <- result |>
