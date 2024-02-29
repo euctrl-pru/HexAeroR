@@ -242,11 +242,11 @@ identify_runways_from_low_trajectories <- function(apt_detections_df, df_f_low_a
     df_rwys <-
 
     df_rwys <- tryCatch({
-      load_dataset(name = paste0(.apt, ".parquet"), datatype = "runway_hex") %>%
+      load_dataset(name = paste0("h3_res_11_rwy_",.apt, ".parquet"), datatype = "runway_hex") %>%
         select(all_of(core_cols_rwy)) %>%
         rename(id_apt = id)
     }, error = function(e) {
-      print(paste0('Warning: Due to limited data in OurAirports, airport [', .apt, '] does not have the runway config. No matching for this airport.'))
+      warning(paste0('Warning: Due to limited data in OurAirports, airport [', .apt, '] does not have the runway config. No matching for this airport.'))
       tibble(id_apt = numeric(),
              airport_ident = character(),
              gate_id = character(),
@@ -259,14 +259,18 @@ identify_runways_from_low_trajectories <- function(apt_detections_df, df_f_low_a
 
     df_hex_rwy <- left_join(df_single, df_rwys, by = c("hex_id_11" = "hex_id"))
 
-    result <- df_hex_rwy |>
-      group_by(apt_det_id, id, airport_ident, gate_id, le_ident, he_ident) |>
-      summarise(min_time = min(time, na.rm = TRUE), max_time = max(time, na.rm = TRUE), .groups = "drop") |>
-      arrange(min_time) |>
-      filter(!is.na(airport_ident)) |>
-      select(-c(apt_det_id, id,))
+    if (length(df_hex_rwy$id_apt) == 0){
+      return(tibble())
+    } else {
+      result <- df_hex_rwy |>
+        group_by(apt_det_id, id, airport_ident, gate_id, le_ident, he_ident) |>
+        summarise(min_time = min(time, na.rm = TRUE), max_time = max(time, na.rm = TRUE), .groups = "drop") |>
+        arrange(min_time) |>
+        filter(!is.na(airport_ident)) |>
+        select(-c(apt_det_id, id,))
 
-    return(result)
+      return(result)
+    }
   }
 
   # Step 5: Apply match_runways_to_hex for each row in apt_detections_df
@@ -511,8 +515,10 @@ identify_runways <-
            latitude_col = 'lat',
            baroaltitude_col = 'baroaltitude'){
 
+    message('[STAGE 1] Reading statevectors...')
     df_w_id <- add_statevector_id(df)
 
+    message('[STAGE 2] Adding hex ids...')
     df_w_hex <-
       add_hex_ids(
         df_w_id,
@@ -521,14 +527,17 @@ identify_runways <-
         resolutions = c(5, 11)
       )
 
+    message('[STAGE 3] Converting baroaltitudes to FL...')
     df_w_baroalt_ft_fl <-
       convert_baroalt_in_m_to_ft_and_FL(df_w_hex, baroaltitude_col = baroaltitude_col)
 
+    message('[STAGE 4] Filtering low altitudes for airport matching...')
     df_f_low_alt <-
       filter_low_altitude_statevectors(df_w_baroalt_ft_fl,
                                        baroalt_ft_col = 'baroaltitude_ft',
                                        threshold = 5000)
 
+    message('[STAGE 5] Finding matching airports...')
     apt_detections_df <-
       identify_potential_airports(
         df_f_low_alt,
@@ -537,9 +546,11 @@ identify_runways <-
         apt_types = c('large_airport', 'medium_airport')
       )
 
+    message('[STAGE 6] Finding matching runways...')
     rwy_detections_df <-
       identify_runways_from_low_trajectories(apt_detections_df, df_f_low_alt)
 
+    message('[STAGE 7] Applying heuristics to determine most likely runways...')
     res <- manipulate_df_and_determine_arrival_departure(rwy_detections_df)
 
     det = res$det
@@ -547,5 +558,6 @@ identify_runways <-
 
     scored_rwy_detections_df <- score_and_apply_heuristics(rwy_detections_df, det)
 
+    print('[DONE] Thank you for your patience.')
     return(list(scored_rwy_detections_df = scored_rwy_detections_df, rwy_detections_df = rwy_detections_df))
   }

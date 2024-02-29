@@ -52,7 +52,7 @@ download_and_extract_zip <- function(url, extract_to) {
 setup_data_directory <- function(base_dir) {
   urls <- c(
     "https://zenodo.org/records/10651018/files/airport_hex.zip?download=1",
-    "https://zenodo.org/records/10651018/files/runway_hex.zip?download=1",
+    "https://zenodo.org/records/10729365/files/runway_hex.zip?download=1",
     "https://zenodo.org/records/10651018/files/test_data.zip?download=1"
   )
   walk(urls, ~download_and_extract_zip(.x, base_dir))
@@ -77,7 +77,7 @@ ensure_data_available <- function() {
   required_dirs <- c('airport_hex', 'runway_hex', 'test_data')
 
   if (!all(map_lgl(required_dirs, ~dir_exists(file.path(data_dir, .x))))) {
-    user_response <- readline(prompt = "Required metadata parquet files not found. Download (~200MB) and setup now? [y/n]: ")
+    user_response <- readline(prompt = "Required metadata parquet files not found. Download (~600MB) and setup now? [y/n]: ")
     if (tolower(user_response) == 'y') {
       message("Downloading required data files...")
       setup_data_directory(data_dir)
