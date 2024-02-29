@@ -422,7 +422,7 @@ score_and_apply_heuristics <- function(df, det) {
 
   # Exclude 'runway_hexagons' from gate_type for further analysis
   result <- result |>
-    filter(gate_type != 'runway_hexagons') |>
+    #filter(gate_type != 'runway_hexagons') |> # This will cause issues when
     mutate(high_number_intersections = intersected_subsections > 5,
            low_minimal_distance = minimal_distance_runway < 5,
            touched_closest_segment_to_rw = minimal_distance_runway == 1,
