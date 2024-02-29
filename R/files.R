@@ -74,11 +74,9 @@ ensure_data_available <- function() {
     dir.create(data_dir)
   }
 
-  data_dir <- system.file("data", package = "HexAeroR")
+  required_dirs <- c('airport_hex', 'runway_hex', 'test_data')
 
-  required_files <- c('airport_hex.parquet', 'runway_hex.parquet', 'test_data.parquet')
-
-  if (!all(map_lgl(required_files, ~dir_exists(file.path(data_dir, .x))))) {
+  if (!all(map_lgl(required_dirs, ~dir_exists(file.path(data_dir, .x))))) {
     user_response <- readline(prompt = "Required metadata parquet files not found. Download (~200MB) and setup now? [y/n]: ")
     if (tolower(user_response) == 'y') {
       message("Downloading required data files...")
@@ -86,6 +84,8 @@ ensure_data_available <- function() {
     } else {
       message("Data download skipped. The package requires data files to function properly.")
     }
+  } else {
+    print('Data packages are loaded correctly.')
   }
 }
 

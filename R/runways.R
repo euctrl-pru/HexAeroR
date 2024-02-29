@@ -239,7 +239,7 @@ identify_runways_from_low_trajectories <- function(apt_detections_df, df_f_low_a
     core_cols_rwy <- c("id", "airport_ref", "airport_ident", "gate_id", "hex_id", "gate_id_nr", "le_ident", "he_ident")
 
     # Initialize df_rwys before the tryCatch block
-    df_rwys <- tibble()
+    df_rwys <-
 
     df_rwys <- tryCatch({
       load_dataset(name = paste0(.apt, ".parquet"), datatype = "runway_hex") %>%
@@ -247,7 +247,7 @@ identify_runways_from_low_trajectories <- function(apt_detections_df, df_f_low_a
         rename(id_apt = id)
     }, error = function(e) {
       print(paste0('Warning: Due to limited data in OurAirports, airport [', .apt, '] does not have the runway config. No matching for this airport.'))
-      tibble(id = numeric(),
+      tibble(id_apt = numeric(),
              airport_ident = character(),
              gate_id = character(),
              hex_id = character(),
