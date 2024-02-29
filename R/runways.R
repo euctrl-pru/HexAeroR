@@ -237,10 +237,21 @@ identify_runways_from_low_trajectories <- function(apt_detections_df, df_f_low_a
       select(apt_det_id, id, time, lat, lon, hex_id_11, baroaltitude_fl)
 
     core_cols_rwy <- c("id", "airport_ref", "airport_ident", "gate_id", "hex_id", "gate_id_nr", "le_ident", "he_ident")
-
-    df_rwys <- load_dataset(name = paste0(.apt, ".parquet"), datatype = "runway_hex") |>
-      select(all_of(core_cols_rwy)) |>
-      rename(c('id_apt' = 'id'))
+    tryCatch({
+      df_rwys <- load_dataset(name = paste0(.apt, ".parquet"), datatype = "runway_hex") |>
+        select(all_of(core_cols_rwy)) |>
+        rename(c('id_apt' = 'id'))
+    }, error = function(e) {
+      print(paste0('Warning: Due to limited data in OurAirports, airport [', .apt,'] does not have the runway config. No matching for this airport.'))
+      return(tibble(id = numeric(),
+                    airport_ident = character(),
+                    gate_id = character(),
+                    hex_id = character(),
+                    le_ident = character(),
+                    he_ident = character(),
+                    min_time = as.POSIXct(character()),
+                    max_time = as.POSIXct(character())))
+    })
 
     df_hex_rwy <- left_join(df_single, df_rwys, by = c("hex_id_11" = "hex_id"))
 
