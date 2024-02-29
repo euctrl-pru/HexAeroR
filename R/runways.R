@@ -261,7 +261,7 @@ identify_runways_from_low_trajectories <- function(apt_detections_df, df_f_low_a
 
     result <- df_hex_rwy |>
       group_by(apt_det_id, id, airport_ident, gate_id, le_ident, he_ident) |>
-      summarise(min_time = min(time), max_time = max(time), .groups = "drop") |>
+      summarise(min_time = min(time, na.rm = TRUE), max_time = max(time, na.rm = TRUE), .groups = "drop") |>
       arrange(min_time) |>
       filter(!is.na(airport_ident)) |>
       select(-c(apt_det_id, id,))
@@ -335,8 +335,8 @@ manipulate_df_and_determine_arrival_departure <- function(df) {
   result <- result |>
     group_by(id_x, apt_det_id, rwy_det_id, airport_ident, le_ident, he_ident) |>
     mutate(
-      min_gate_distance = min(gate_distance_from_rwy_nm),
-      max_gate_distance = max(gate_distance_from_rwy_nm)
+      min_gate_distance = min(gate_distance_from_rwy_nm, na.rm = TRUE),
+      max_gate_distance = max(gate_distance_from_rwy_nm, na.rm = TRUE)
     ) |>
     ungroup()
 
@@ -381,11 +381,11 @@ manipulate_df_and_determine_arrival_departure <- function(df) {
   result <- result |>
     group_by(id_x, apt_det_id, rwy_det_id, airport_ident, le_ident, he_ident, gate_type) |>
     summarise(
-      entry_time_approach_area = min(min_time),
-      exit_time_approach_area = max(max_time),
+      entry_time_approach_area = min(min_time, na.rm = TRUE),
+      exit_time_approach_area = max(max_time, na.rm = TRUE),
       intersected_subsections = n(),
-      minimal_distance_runway = min(gate_distance_from_rwy_nm),
-      maximal_distance_runway = max(gate_distance_from_rwy_nm)
+      minimal_distance_runway = min(gate_distance_from_rwy_nm, na.rm = TRUE),
+      maximal_distance_runway = max(gate_distance_from_rwy_nm, na.rm = TRUE)
     ) |>
     ungroup()
 
