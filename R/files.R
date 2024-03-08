@@ -51,7 +51,7 @@ download_and_extract_zip <- function(url, extract_to) {
 #' @importFrom purrr walk
 setup_data_directory <- function(base_dir) {
   urls <- c(
-    "https://zenodo.org/records/10651018/files/airport_hex.zip?download=1",
+    "https://zenodo.org/records/10797224/files/airport_hex.zip?download=1",
     "https://zenodo.org/records/10729365/files/runway_hex.zip?download=1",
     "https://zenodo.org/records/10651018/files/test_data.zip?download=1"
   )
